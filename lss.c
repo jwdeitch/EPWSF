@@ -13,6 +13,8 @@ struct dirent *dir_obj;
 struct stat *s;
 struct dirent *list_array;
 
+struct dirent *exploreDir(char *curr_dir);
+
 int main(int argc, char *argv[]) {
     char *curr_dir;
 
@@ -34,9 +36,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    struct dirent *dir_listing = exploreDir(curr_dir);
+
 }
 
-struct dirent* exploreDir(char* curr_dir) {
+struct dirent *exploreDir(char *curr_dir) {
     DIR *dirp;
     dirp = opendir(curr_dir);
 
@@ -58,8 +62,7 @@ struct dirent* exploreDir(char* curr_dir) {
             list_array = (struct dirent *) realloc(list_array,
                                                    sizeof(struct dirent) * (alloc_count / list_page_size) * 2);
         }
-
-
-        printf("%s\n", list_array[0].d_name);
     }
+
+    return list_array;
 }
