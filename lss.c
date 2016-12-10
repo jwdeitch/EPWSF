@@ -34,6 +34,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+}
+
+struct dirent* exploreDir(char* curr_dir) {
     DIR *dirp;
     dirp = opendir(curr_dir);
 
@@ -57,7 +60,6 @@ int main(int argc, char *argv[]) {
         }
 
 
-        printf("%s\n", objName);
+        printf("%s\n", list_array[0].d_name);
     }
-
 }
