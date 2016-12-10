@@ -13,23 +13,31 @@ struct dirent *dir_obj;
 struct stat *s;
 struct dirent *list_array;
 
-int main(int argc, char **argv) {
-    char* curr_dir;
+int main(int argc, char *argv[]) {
+    char *curr_dir;
 
     if (argc == 1) {
         char cwd[PATH_MAX];
         if (getcwd(cwd, sizeof(cwd)) != NULL) {
             curr_dir = cwd;
+        } else {
+            printf("invalid path");
+            return 1;
         }
     } else {
         char resolved_path[PATH_MAX];
-        realpath(argv[1], resolved_path);
+        if (realpath(argv[1], resolved_path) != NULL) {
+            curr_dir = resolved_path;
+        } else {
+            printf("invalid path");
+            return 1;
+        }
     }
 
     DIR *dirp;
     dirp = opendir(curr_dir);
 
-    list_array = (struct dirent*)calloc(list_page_size, sizeof(struct dirent));
+    list_array = (struct dirent *) calloc(list_page_size, sizeof(struct dirent));
     int alloc_count = 0;
 
     while ((dir_obj = readdir(dirp)) != NULL) {
@@ -44,7 +52,8 @@ int main(int argc, char **argv) {
             list_array[alloc_count] = *dir_obj;
             alloc_count++;
         } else {
-            list_array = (struct dirent*)realloc(list_array, sizeof(struct dirent) * (alloc_count/list_page_size) * 2);
+            list_array = (struct dirent *) realloc(list_array,
+                                                   sizeof(struct dirent) * (alloc_count / list_page_size) * 2);
         }
 
 
