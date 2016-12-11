@@ -36,8 +36,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    struct dirent *dir_listing = exploreDir(curr_dir);
+    exploreDir(curr_dir);
 
+    for(int i = 0; list_array[i].d_ino != 0; i++) {
+        if (list_array[i].d_type == '\x04') {
+
+        }
+        printf("%s\n", list_array[i].d_name);
+    }
 }
 
 struct dirent *exploreDir(char *curr_dir) {
