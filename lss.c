@@ -12,11 +12,12 @@ struct stat statbuf;
 struct dirent *dir_obj;
 struct stat *s;
 struct dirent *list_array;
+char *curr_dir;
 
 struct dirent *exploreDir(char *curr_dir);
+void listdir(const char *name, int level);
 
 int main(int argc, char *argv[]) {
-    char *curr_dir;
 
     if (argc == 1) {
         char cwd[PATH_MAX];
@@ -36,6 +37,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
+
+    listdir(curr_dir, 0);
+
+}
+
+int explore(int argc, char *argv[]) {
     exploreDir(curr_dir);
 
     for(int i = 0; list_array[i].d_ino != 0; i++) {
@@ -72,3 +79,29 @@ struct dirent *exploreDir(char *curr_dir) {
 
     return list_array;
 }
+
+void listdir(const char *name, int level)
+{
+    DIR *dir;
+    struct dirent *entry;
+
+    if (!(dir = opendir(name)))
+        return;
+    if (!(entry = readdir(dir)))
+        return;
+
+    do {
+        if (entry->d_type == DT_DIR) {
+            char path[1024];
+            int len = snprintf(path, sizeof(path)-1, "%s/%s", name, entry->d_name);
+            path[len] = 0;
+            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+                continue;
+            printf("%*s[%s]\n", level*2, "", entry->d_name);
+            listdir(path, level + 1);
+        }
+        else
+            printf("%*s- %s\n", level*2, "", entry->d_name);
+    } while (entry = readdir(dir));
+    closedir(dir);
+} // http://stackoverflow.com/a/8438663/4603498
