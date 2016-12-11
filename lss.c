@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 int explore(int argc, char *argv[]) {
     exploreDir(curr_dir);
 
-    for(int i = 0; list_array[i].d_ino != 0; i++) {
+    for (int i = 0; list_array[i].d_ino != 0; i++) {
         if (list_array[i].d_type == '\x04') {
 
         }
@@ -80,8 +80,7 @@ struct dirent *exploreDir(char *curr_dir) {
     return list_array;
 }
 
-void listdir(const char *name, int level)
-{
+void listdir(const char *name, int level) {
     DIR *dir;
     struct dirent *entry;
 
@@ -93,15 +92,14 @@ void listdir(const char *name, int level)
     do {
         if (entry->d_type == DT_DIR) {
             char path[1024];
-            int len = snprintf(path, sizeof(path)-1, "%s/%s", name, entry->d_name);
+            int len = snprintf(path, sizeof(path) - 1, "%s/%s", name, entry->d_name);
             path[len] = 0;
             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
                 continue;
-            printf("%*s[%s]\n", level*2, "", entry->d_name);
+            printf("%*s[%s]\n", level * 2, "", entry->d_name);
             listdir(path, level + 1);
-        }
-        else
-            printf("%*s- %s\n", level*2, "", entry->d_name);
+        } else
+            printf("%*s- %s\n", level * 2, "", entry->d_name);
     } while (entry = readdir(dir));
     closedir(dir);
 } // http://stackoverflow.com/a/8438663/4603498
