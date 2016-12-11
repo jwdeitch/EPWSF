@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
+    printf("┌%s\n", curr_dir);
     listdir(curr_dir, 0);
 
 }
@@ -96,10 +96,10 @@ void listdir(const char *name, int level) {
             path[len] = 0;
             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
                 continue;
-            printf("%*s[%s]\n", level * 2, "", entry->d_name);
+            printf("%*s↳[%s]\n", level * 2, "", entry->d_name);
             listdir(path, level + 1);
         } else
-            printf("%*s- %s\n", level * 2, "", entry->d_name);
+            printf("%*s|- %s\n", level * 2, "", entry->d_name);
     } while (entry = readdir(dir));
     closedir(dir);
 } // http://stackoverflow.com/a/8438663/4603498
